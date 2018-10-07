@@ -23,12 +23,15 @@ class: impact
 Michal Vaner (vorner@vorner.cz)
 ]
 
-???
+---
 
-* About me:
-  - Using Rust for ~2 years
-* Presentation first created in CZ.NIC 1.5years ago
-* Now orange because in Avast
+# About me
+
+* Using Rust for about 2 years
+* Self-appointed member of the Rust evangelism strike force
+  - Won't tell you to Rewrite it in Rust
+* Currently employed at Avast
+* First version of presentation made 1.5 years ago at CZ.NIC
 
 ---
 
@@ -213,6 +216,16 @@ void read_buf(int fd, uint8_t *buffer,
 
 ---
 
+# Shift of mentality
+
+* Programming is more complex than human brain can cope with
+* Papering over complexity doesn't always work
+* Don't trust the programmer not to make stupid mistakes
+* Better reject some correct programs than accept some incorrect ones
+* Wrong assumptions about code should make something break at compile time
+
+---
+
 # Cool, but how?
 
 * Strict types ‒ no automatic conventions, distinct types for distinct things
@@ -343,3 +356,17 @@ fd.read_to_end(&mut input)
 * Down to stuff like coding style ‒ saves time arguing
 * No inconsistencies like print vs. println in go (print inserts spaces between
   arguments, println only if the arguments aren't strings)
+
+---
+
+# How to learn
+
+* The Rust Book: https://doc.rust-lang.org/book
+* Documentation: https://doc.rust-lang.org
+* Try to build something
+  - Argue with the compiler for a while
+* Many libraries & rustc itself have `E-Easy` issues, often with mentoring
+* Friendly community:
+  - gitter
+  - IRC
+  - User's forum
