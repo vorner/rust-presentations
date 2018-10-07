@@ -1,3 +1,7 @@
+title: Why you want to learn Rust
+class: animation-fade
+layout: true
+
 <!--
 This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
 International License. To view a copy of this license, visit
@@ -5,11 +9,6 @@ http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to Creative
 Commons, PO Box 1866, Mountain View, CA 94042, USA.
 -->
 
-title: Why you want to learn Rust
-class: animation-fade
-layout: true
-
-<!-- This slide will serve as the base layout for all your slides -->
 .bottom-bar[
   {{title}}
 ]
@@ -23,6 +22,13 @@ class: impact
 .left-column[
 Michal Vaner (vorner@vorner.cz)
 ]
+
+???
+
+* About me:
+  - Using Rust for ~2 years
+* Presentation first created in CZ.NIC 1.5years ago
+* Now orange because in Avast
 
 ---
 
