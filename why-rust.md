@@ -235,7 +235,7 @@ void read_buf(int fd, uint8_t *buffer,
 * `Result<T, E>` ‒ doesn't give you the value unless you do something with the
   error.
 * Doesn't allow uninitialized values.
-* Lifetimes, sharing `XOR` mutability.
+* Lifetimes, sharing `XOR` mutability, move semantics.
 * Mandatory `Mutex` ‒ data is inside, doesn't let you forget to lock.
 
 - Allows to bypass some checks with `unsafe`.
