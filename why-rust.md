@@ -27,10 +27,11 @@ Michal Vaner (vorner@vorner.cz)
 
 # About me
 
+* Currently employed at Avast
+* Using many programming languages
 * Using Rust for about 2 years
 * Self-appointed member of the Rust evangelism strike force
   - Won't tell you to Rewrite it in Rust
-* Currently employed at Avast
 * First version of presentation made 1.5 years ago at CZ.NIC
 
 ---
@@ -73,7 +74,7 @@ Michal Vaner (vorner@vorner.cz)
 
 * Steep learning curve
   - Lifetimes & Borrow Checker
-  - 8 different types for strings
+  - 8 different types of strings
   - Insists on handling errors, thread safety...
 * Parts of ecosystem are not mature
   - Some libraries missing, some incomplete
@@ -166,6 +167,21 @@ uint64_t timeMsec(clockid_t id) {
 }
 ```
 
+---
+
+# Example 1
+
+```c++
+uint64_t timeMsec(clockid_t id) {
+	struct timespec ts;
+	int result = clock_gettime(id, &ts);
+
+	assert(result != -1);
+
+*	return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+}
+```
+
 ???
 
 * On some architectures, the `tv_sec * 1000` can overflow
@@ -187,6 +203,23 @@ while True:
         print("The database is broken at %s" % time.ctiem())
 ```
 
+---
+
+# Example 2
+
+```python
+import time
+import database
+
+# This program runs as a daemon and complains
+# whenever it detects the database is broken.
+
+while True:
+    time.sleep(300)
+    if database.broken():
+*       print("The database is broken at %s" % time.ctiem())
+```
+
 ???
 
 * Typo
@@ -202,6 +235,22 @@ void read_buf(int fd, uint8_t *buffer, size_t buf_size) {
 
   while (buf_size > position) {
     position += read(fd, buffer + position,
+                     buf_size - position);
+  }
+}
+```
+
+---
+
+# Example 3
+
+```c
+// Read one bufferfull of data, please.
+void read_buf(int fd, uint8_t *buffer, size_t buf_size) {
+  size_t position = 0;
+
+  while (buf_size > position) {
+*   position += read(fd, buffer + position,
                      buf_size - position);
   }
 }
@@ -230,6 +279,27 @@ void output(A arr[], size_t cnt) {
 int main() {
     B buffer[4] = {};
     output(buffer, 4);
+    return 0;
+}
+```
+
+---
+
+# Example 4
+
+```cpp
+struct A { uint64_t x = 42; };
+
+struct B: A { string y = "hello"; };
+
+*void output(A arr[], size_t cnt) {
+    for (size_t i = 0; i < cnt; i ++)
+        cout << arr[i].x << endl;
+}
+
+int main() {
+    B buffer[4] = {};
+*   output(buffer, 4);
     return 0;
 }
 ```
@@ -318,8 +388,15 @@ really enforces them, or not unless you run it.
 
 ???
 
-* Calling into and from C is without additional cost ‒ no switching of stacks, no
-hidden translation
+* Basically a different syntax for something like C++, but with additional phase
+  that proves the program correct.
+* Yes, including part of the C++ complexity (the one about memory management,
+  etc ‒ not the one about too many interacting rules).
+* Zero-overhead: Map with `()` values.
+* Calling into and from C is without additional cost ‒ no switching of stacks,
+  no hidden translation. Compared to eg. Go, something still needs to do the
+  conversions (string in Go is a different thing than string in C), but then
+  there's not the part with switching stacks, calling it a suspension point…
 
 ---
 
@@ -375,11 +452,18 @@ my $input;
 {
     local $/; # Slurp mode
     $input = <$fd>;
+    # Wait… what about errors?
 }
 ```
 ]
 
 .right-column[
+* Python
+
+```python
+input = fd.read()
+```
+
 * Rust
 
 ```rust
