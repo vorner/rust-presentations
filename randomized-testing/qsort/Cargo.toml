@@ -5,3 +5,5 @@ authors = ["Michal 'vorner' Vaner <vorner@vorner.cz>"]
 edition = "2018"
 
 [dependencies]
+itertools = "~0.8"
+proptest = "~0.9"

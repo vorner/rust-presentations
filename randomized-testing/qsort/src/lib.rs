@@ -10,7 +10,7 @@
 /// qsort(&mut d);
 /// assert_eq!([1, 2, 3], d);
 /// ```
-pub fn qsort(data: &mut [i64]) {
+pub fn qsort(data: &mut [u8]) {
     if data.len() <= 1 {
         return;
     }
