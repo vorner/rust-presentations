@@ -2,10 +2,13 @@
 
 #include <stdio.h>
 
-int main(int argc, const char *argv[]) {
-	int ch;
-	while ((ch = getchar()) != EOF) {
-		demorse(ch);
+#define BUF_SIZE 1024
+
+int main() {
+	char buf[BUF_SIZE];
+	while (fgets(buf, BUF_SIZE, stdin)) {
+		demorse(buf);
+		puts(buf);
 	}
 	return 0;
 }
