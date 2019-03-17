@@ -11,6 +11,7 @@ proptest! {
     )]
 
     #[test]
+    #[ignore]
     fn sort(mut data: Vec<u8>) {
         let original = data.clone();
         qsort(&mut data[..]);
