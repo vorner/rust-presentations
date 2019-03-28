@@ -26,6 +26,7 @@ pub fn qsort(data: &mut [u8]) {
             r -= 1;
         } else {
             data.swap(l, r);
+            l += 1; r -= 1;
         }
     }
 }
@@ -33,6 +34,9 @@ pub fn qsort(data: &mut [u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    use itertools::Itertools;
+    use proptest::prelude::*;
 
     #[test]
     fn sort_empty() {
@@ -74,5 +78,42 @@ mod tests {
         let mut d = [1, 8, 3, 7, 5, 6, 4, 2, 9];
         qsort(&mut d);
         assert_eq!([1, 2, 3, 4, 5, 6, 7, 8, 9], d);
+    }
+
+    /* ========================================================================================*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+    proptest! {
+        #![proptest_config(
+            ProptestConfig {
+                timeout: 100,
+                .. ProptestConfig::default()
+            }
+        )]
+
+        #[test]
+        #[ignore]
+        fn sort(mut data: Vec<u8>) {
+            let original = data.clone();
+            qsort(&mut data[..]);
+            prop_assert_eq!(original.len(), data.len());
+            for val in &original {
+                prop_assert!(data.contains(val));
+            }
+            for (prev, cur) in data.iter().tuple_windows() {
+                prop_assert!(prev <= cur);
+            }
+        }
     }
 }

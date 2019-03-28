@@ -79,6 +79,7 @@ pub fn qsort(data: &mut [u8]) {
             r -= 1;
         } else {
             data.swap(l, r);
+            l += 1; r -= 1;
         }
     }
 }
