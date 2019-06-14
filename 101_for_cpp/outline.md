@@ -35,10 +35,23 @@
   - „object“ model
   - Allows no-std mode
   - Compile-time meta-programming
+  - Both have undefined behaviour (but Rust doesn't have infinite loops there)
 * Differences:
   - No exceptions
   - No inheritance
+  - No type auto-conversions
+  - No overloading
+  - No default parameters
+  - No pointer arithmetics (only as a method)
+  - Hellfire combos
   - Checked generics
   - Attitude towards programmer & safety & readability
   - Build systems
   - Big vs. easy to include libraries
+  - Error messages
+
+
+## References/sources
+
+C++ runtime model
+https://www.youtube.com/watch?reload=9&v=JaKKzgqINhI&feature=youtu.be
