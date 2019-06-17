@@ -36,6 +36,7 @@
   - Allows no-std mode
   - Compile-time meta-programming
   - Both have undefined behaviour (but Rust doesn't have infinite loops there)
+  - Compile times
 * Differences:
   - No exceptions
   - No inheritance
