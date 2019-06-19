@@ -56,3 +56,12 @@
 
 C++ runtime model
 https://www.youtube.com/watch?reload=9&v=JaKKzgqINhI&feature=youtu.be
+
+## Materials
+
+https://twitter.com/graydon_pub/status/958192076209897472/photo/1
+
+Basically I've an anxious, pessimist personality; most systems I try to build
+are a reflection of how terrifying software-as-it-is-made feels to me. I'm
+seeking peace and security amid a nightmare of chaos. I want to help programmers
+sleep well, worry less.
