@@ -37,6 +37,9 @@
   - Compile-time meta-programming
   - Both have undefined behaviour (but Rust doesn't have infinite loops there)
   - Compile times
+* Features:
+  - Cargo
+  - Cargo update/outdated, cargo audit
 * Differences:
   - No exceptions
   - No inheritance
