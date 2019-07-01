@@ -262,14 +262,13 @@ impl Foo {
 * Found this in a header file:
 
 ```cpp
-namespace {
-const constexpr std::string answer = "42";
-}
+static const std::string = "42";
 ```
 
 --
 
-* And decided to change the type to `unsigned`
+* That looks *old style* and has other problems
+* Let's just have an `unsigned` constant instead
 * The compiler would show an error at every use
 
 ---
@@ -343,8 +342,8 @@ std::unordered_map<int64_t, int64_t> map;
 
 // ...
 
-if (const auto elem = map.find(42); elem != map.end()) {
-    std::cout << "Value of 42 is " << *elem << std::endl;
+if (const auto &elem = map.find(42); elem != map.end()) {
+    std::cout << "Value of 42 is " << elem->second << std::endl;
 } else {
     std::cout << "We don't have value of 42" << std::endl;
 }
@@ -360,7 +359,7 @@ std::unordered_map<int64_t, int64_t> map;
 // ...
 
 // Help! If 42 is not there, the aliens might kill all the kittens!
-std::cout << "Value of 42 is " << *map.find(42);
+std::cout << "Value of 42 is " << map.find(42)->second;
 ```
 
 ---
