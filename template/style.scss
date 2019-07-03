@@ -46,6 +46,10 @@ h1, h2, h3, h4, h5, h6 {
 h1 { color: $primary; }
 h2 { color: $secondary; }
 h3 { color: $tertiary; }
+ul ul {
+	margin-top: .25em;
+	margin-bottom: .5em;
+}
 li { margin-bottom: .25em; };
 pre, code {
   text-align: left;
