@@ -36,8 +36,6 @@ Michal Vaner (michal.vaner@avast.com)
   - Won't tell you to Rewrite It In Rust
 * Maybe both communities will hate me after today
 
-**TODO**: Image of a crab?
-
 ---
 
 # Why talk about Rust to C++ folks?
@@ -53,8 +51,6 @@ Michal Vaner (michal.vaner@avast.com)
 * Expanding the horizons
   - Techniques and patterns used in one can help in the other
 
-**TODO**: A graph of influences?
-
 ---
 
 # About the talk
@@ -65,16 +61,66 @@ Michal Vaner (michal.vaner@avast.com)
 * About real-life implementations of C++
   - The C++ standard allows weird implementations
 * Will not *teach* Rust syntax
+  - Maybe motivate to have a look yourself
 * Will skim few selling points of Rust
 
 ---
 
-# The 10k miles view
+# Why I learned Rust
+
+* Heard about Rust and it's safety guarantees
+  - No segfaults, no data races
+  - But without GC
+* Pretty audacious claims
+  - Not even GC languages protect against data races
+  - 🦄
+* Had a look to *disprove* the claims
+  - And failed at that
+
+???
+
+* It's uncommon for something to fulfill the marketing claims
+
+---
+
+# The 10k miles overview
 
 * Rust is *mostly* C++
+  - If done today from scratch
 * With Haskell's type system
 * The best-practices *enforced* by the compiler
 * Syntax & feature cleanup
+* It wasn't *meant* that way from start
+  - The motivation was safety, not C++ replacement
+
+---
+
+# Basic info
+
+.left-column[
+* Multi-paradigm
+  - *Mostly* imperative
+  - Allows functional, OOP, …
+* Strong static typing
+* Started by Graydon Hoare in 2006
+  - Personal project
+* Mozilla started to sponsor in 2009
+* 1.0 released on May 15 2015
+* Community development
+  - With semi-formal RFC process
+]
+
+.right-column[
+```rust
+fn main() {
+    println!("Hello world");
+}
+```
+]
+
+???
+
+* You've probably heard something, but if not...
 
 ---
 
@@ -88,6 +134,7 @@ Michal Vaner (michal.vaner@avast.com)
 * Ahead of the time compilation to native code
 * Threads map to OS threads
 * Types compose without implicit indirection
+  - Members are in-line
 * Methods are just syntax sugar for functions
 * Minimal run-time introspection
 
@@ -116,9 +163,9 @@ Michal Vaner (michal.vaner@avast.com)
 * Both have undefined behaviour
   - An empty infinite loop is not UB in Rust
   - Only `unsafe` lets you write UB in Rust
-* Compile times
 * The same threading model
   - Memory orderings
+* Compile times
 
 ---
 
@@ -152,12 +199,15 @@ Michal Vaner (michal.vaner@avast.com)
 
 # Attitude towards the programmer
 
-* Humans make mistakes
+* To err is human
+  - Especially on Monday morning before coffee ☕
 * Cognitive bandwidth is limited
-* Compiler proves some correctness guarantees
+  - Save it for the problem, not language
+* Compiler proves certain correctness guarantees
   - Frees some brain power of the programmer
   - Can't be broken by refactoring
-* It's better to refuse correct program than allow incorrect one
+* It's better to refuse correct program than compile an incorrect one
+  - There are escape hatches
 
 ---
 
@@ -175,7 +225,7 @@ sleep well, worry less.*
 # Safe by default
 
 * Borrow checker to enforce lifetimes
-* Extra `unsafe` power enabled by keyword
+* Extra `unsafe` power enabled by a keyword
   - Most programs don't need to use
   - Mostly for building new abstractions or FFI
   - No UB without `unsafe`
@@ -183,9 +233,18 @@ sleep well, worry less.*
 * Visibility defaults to private
 * All variables need to be initialized before use
 * Encourages „pit of success“ APIs
-  - Allows encoding certain properties into it
+  - Allows encoding certain properties into types
   - Example: HTTP body can be sent just once, after the headers
   - Example: `Mutex` contains protected data
+
+???
+
+* Fighting the borrow checker is a phase of learning Rust
+  - Automatic prover
+  - It is *usually* right
+  - One gets use to it
+  - Teaches certain design patterns
+* Probably missing something
 
 ---
 
@@ -213,8 +272,10 @@ public:
 # Mutex in Rust
 
 ```rust
+use std::sync::Mutex;
+
 struct Foo {
-    std::sync::Mutex<String> data;
+    Mutex<String> data;
 }
 
 impl Foo {
@@ -232,7 +293,8 @@ impl Foo {
 
 * Adheres to Rust codestyle conventions (eg. getter without `get_`).
 * Unwrap because of lock poisoning
-* The setter would probably be written in a single command too.
+* The setter would probably be written in a single command too, just showing off
+  some syntax.
 * Is 1:1 rewrite, including where move semantics or copying of things happen
 * Doesn't allow the access to the inner string without locking. In C++ we could
   make a mistake, for example overlook something during refactoring.
@@ -250,10 +312,19 @@ impl Foo {
   - Has panics which behave similarly
   - Strong exception guarantee is not mandated
 
+--
+
 + Avoids hellfire combos
   - Combinations of features that do something *weird*
   - Like overloading & templates
-  - Or inheritance + pointer to array decay
+  - Or inheritance & pointer to array decay
+
+???
+
+* Makes the code a bit more wordy
+* Time lost by writing longer code is gained by not figuring out what went wrong
+* But also less surprising and easier to read
+  - Because things don't happen without a clue in the code
 
 ---
 
@@ -265,11 +336,16 @@ impl Foo {
 static const std::string = "42";
 ```
 
+???
+
+* Let's do a bit more practical intermezzo, demonstrating the above
+
 --
 
 * That looks *old style* and has other problems
 * Let's just have an `unsigned` constant instead
 * The compiler would show an error at every use
+  - Compiler-driven refactoring
 
 ---
 
@@ -301,9 +377,18 @@ std::cout << msg << std::endl;
   - Convention: errors by `Result<T, E>`
 * Traits
   - Used for adding methods to types
-  - Basics for generics
+  - Building block for generics
 * No auto-conversions
   - Has coercions, but doesn't *change* the object
+
+???
+
+* But shoehorned into static dispatch of methods & imperative language
+* Type elision allowed only inside functions, not in signatures
+  - When looking at docs or headers, one wants to know the types, not the read
+    the whole body to figure it out
+  - Type elision works *backwards* too (eg. figuring the type of vector element
+    by what is being inserted)
 
 ---
 
@@ -325,7 +410,8 @@ fn file_to_mem<P: AsRef<Path>>(path: P) -> Result<Vec<u8>, Error> {
 
 * Error handling:
   - Need to extract the Ok variant
-  - Possible by pattern matching, methods, …
+  - Possible by pattern matching, methods, or the question mark → visible, but
+    terse
 * Generics, traits
   - On the input
   - The `read_to_end` is method of the `Read` trait, `File` implements that. But
@@ -359,6 +445,7 @@ std::unordered_map<int64_t, int64_t> map;
 // ...
 
 // Help! If 42 is not there, the aliens might kill all the kittens!
+// Or make all the dead kittens alive again!
 std::cout << "Value of 42 is " << map.find(42)->second;
 ```
 
@@ -412,8 +499,7 @@ println!("The value of 42 is {}", map.get(&42).unwrap());
   - By convention called `new`
 * Destructors by implementing the `Drop` trait
 * Copying by implementing the `Clone` trait
-  - Can be auto-generated by the compiler
-  - Copying is opt-in
+  - Can be auto-generated by the compiler (opt-in)
 * Assignment and similar *moves*
   - Not copies, unlike in C++
   - Original ceases to exist
