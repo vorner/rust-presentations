@@ -61,11 +61,11 @@ Michal Vaner (michal.vaner@avast.com)
 * It's a singly-linked list.
 * Top is the head.
 
-1. Prepare the new node.
-2. Read the head and link it from the new node.
-3. *Try* updating the head.
+1. Read the head pointer.
+2. Prepare the new node, linking to the head.
+3. *Try* updating the head with the new node.
   - Success if it's still the same.
-  - Failure if changed by other thread → retry from 2.
+  - Failure if changed by other → update new node & retry.
 
 ---
 
@@ -122,7 +122,7 @@ fn push(stack: &Stack, value: usize) {
 
 1. Remove the node from the data structure.
 2. Stash it for later.
-  - And make a not which threads are *active*.
+  - And make a note which threads are *active*.
 3. Do something else in between.
 4. Once all the active threads make enough progress, free it.
   - They stop using any pointers into the data structure.
@@ -221,7 +221,7 @@ fn push(stack: &Stack, value: usize) {
 
 # Properties
 
-* Overhead per operation used pointer.
+* Overhead per used pointer.
 * Relatively more expensive freeing.
   - Can push the expense to random other thread.
 * Implementation difficulties:
@@ -241,11 +241,13 @@ fn push(stack: &Stack, value: usize) {
 
 # In practice
 
-* [Concurrency building blocks](http://amino-cbbs.sourceforge.net/).
-* [Concurrency kit](http://concurrencykit.org/).
-* [Atomic Ptr Plus](http://atomic-ptr-plus.sourceforge.net/).
-* [libcds](http://libcds.sourceforge.net/).
-* [HazardCell](https://github.com/stjepang/atomic/blob/master/src/hazard.rs).
+* [Concurrency building blocks](http://amino-cbbs.sourceforge.net/) (C, C++,
+  Java).
+* [Concurrency kit](http://concurrencykit.org/) (C).
+* [Atomic Ptr Plus](http://atomic-ptr-plus.sourceforge.net/) (C++).
+* [libcds](http://libcds.sourceforge.net/) (C++).
+* [HazardCell](https://github.com/stjepang/atomic/blob/master/src/hazard.rs)
+  (Rust).
   - Not yet finished/released.
 
 ---
