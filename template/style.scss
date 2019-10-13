@@ -102,6 +102,11 @@ blockquote {
   h1 { font-size: $font-size-impact; }
 }
 
+.broken {
+  h1, h2 { color: Red; }
+  .bottom-bar { background-color: Red; }
+}
+
 .full {
   &, h1, h2 { color: $text-light; }
   &iframe {

@@ -39,6 +39,7 @@ Michal Vaner (michal.vaner@avast.com)
   - What problems they pose.
 * Explanation of Orderings.
   - With some safe usage patterns.
+* TODO: Link to the HTML version
 
 ---
 
@@ -95,6 +96,8 @@ println!("{}", cnt);
 
 ---
 
+class: broken
+
 # Even More Broken Example
 
 ```rust
@@ -124,7 +127,6 @@ println!("{}", cnt);
 ???
 * Run the program multiple times. Without --release.
 * Yes, it could also eat your kitten, or explode, or send 1001 emails.
-* TODO: Can we make this slide red?
 
 ---
 
@@ -146,11 +148,19 @@ println!("{}", cnt);
 
 ---
 
-# What happens
+# Naïve model
 
-TODO: Image or images:
-* The RAM model with shared memory
-* The model where each thread has its own memory
+.center[
+![Naive RAM model](atomics/naive-ram.svg)
+]
+
+---
+
+# Reality (almost)
+
+.center[
+![Cached RAM model](atomics/caches-ram.svg)
+]
 
 ---
 
@@ -171,6 +181,18 @@ TODO: Image or images:
 
 * The Ordering is per access, but it's better to designate a level for the whole
   variable.
+* The higher ordering guarantees, the more expensive it is.
+  - On some platforms, some might get promoted.
+  - Some operations increase the cost, eg. read-write operation is the same cost
+    on AcqRel as SeqCst on x86-64.
+
+---
+
+# The Memory Model
+
+.center[
+![Thread model](atomics/model.svg)
+]
 
 ---
 
@@ -179,7 +201,10 @@ TODO: Image or images:
 * Don't know in what order operations happen.
   - Variables „get confused“ by multiple threads.
 * UB when not synchronized by other means.
-* TODO: Image with two threads writing to the same variable.
+
+.center[
+![Unordered gets confused](atomics/unordered.svg)
+]
 
 ???
 
@@ -197,6 +222,14 @@ TODO: Image or images:
 * Good for metrics.
   - If you don't mind there might be more responses than requests.
 * Good for claiming tokens.
+
+.center[
+![Relaxed](atomics/relaxed.svg)
+]
+
+???
+
+* Doesn't really exist on x86-64, promoted to AcqRel.
 
 ---
 
@@ -222,32 +255,66 @@ println!("{}", cnt.load(Ordering::Relaxed));
 
 ---
 
-* TODO: Claiming a token example.
-* TODO: Broken example with 2 out of order atomics.
+# Beware of unrelated atomics
+
+* Order of changes from different atomics is unspecified.
+* Can differ from thread to thread.
+
+.center[
+![Unrelated relaxed](atomics/relaxed-unrelated.svg)
+]
+
+???
+
+* This reordering can happen only on *different* atomics.
+* Order of each separate atomic is always preserved.
+
+---
+
+class: broken
+
+# Broken example
+
+```rust
+// Thread 1
+value.store(42, Ordering::Relaxed);
+ready.store(true, Ordering::Relaxed);
+
+// Thread 2
+while !ready.lead(Ordering::Relaxed) {
+}
+// Boom: This can fail.
+assert_eq!(42, Ordering::Relaxed);
+```
+
+* Not an UB.
+* *Just* doesn't work correctly.
 
 ---
 
 # I'll tell you all I know ‒ `Release`/`Acquire`
 
-* Writing a value with `Release` *tags* it:
-  - Bundled snapshot of thread's idea of memory content.
-* Reading a tagged value with `Acquire` receives snapshot.
-* `AcqRel` ‒ combination for read-write operations.
+.left-column[
+* `Release` *tags* a written value.
+  - Snapshot of the memory content.
+* Reading with `Acquire` receives the snapshot.
+* `AcqRel` ‒ combination of both.
 * **Warning**:
-  - Read with `Release` doesn't work.
-  - Write with `Acquire` doesn't work.
+  - `Acquire` needs a read.
+  - `Release` needs a write.
   - Failed `compare_and_swap` *doesn't* write.
-* Still independent timelines of Atomics
+* Still independent timelines of Atomics.
+]
+
+.right-column[
+![Release Acquire](atomics/acq-rel.svg)
+]
 
 ???
 
 * The timeline of the atomic is a wormhole between the parallel thread's
   universes. The release-acquire piggy-backs a message about the universe state,
   but it needs the value to ride on.
-
----
-
-* TODO: Image
 
 ---
 
@@ -270,6 +337,7 @@ locked.store(false, Ordering::Release);
 * Acquire ‒ we want all the changes the previous owner of the lock did.
 * Release ‒ Make sure the next one to lock it gets all our changes.
 * Want something inside, wrap it in nice API, better parking...
+* Releasing without previous acquire can break a chain.
 
 ---
 
