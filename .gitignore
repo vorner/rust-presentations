@@ -3,3 +3,4 @@
 .ccls-cache
 lockfree-non-gc/*.svg
 atomics/*.svg
+workshop-ffi/*.svg

@@ -38,16 +38,39 @@ Michal Vaner (michal.vaner@avast.com)
 
 ---
 
+class: impact
+
+# Topic
+
+## Rust Foreign Function Interface
+
+---
+
+class: impact
+
+# Goal
+
+## Learn how to connect Rust with other languages
+
+---
+
 # Agenda
 
+.left-column[
 * What is this FFI anyway and why do I need it?
 * Calling C from Rust.
 * Calling Rust from C.
 * Binding generators.
 * Common tips and traps.
+]
+
+.right-column[
+![Firefox logo](images/firefox.png)
+]
 
 ???
 
+* Story about firefox
 * Time for quiz:
   - How many (computer) languages do you know/use?
   - Did want to use multiple in the same program?
@@ -56,18 +79,18 @@ Michal Vaner (michal.vaner@avast.com)
 
 ---
 
-# What is this FFI good for?
+# FFI allows you to
 
-* Way to interface with C ABI.
+* to interface with C ABI.
   - C ABI is common ground.
   - Almost any language can interact with C.
-* Rust can call C functions.
+* call C functions from Rust.
 
 ???
 * Access to a lot of functionality
 
 --
-* Rust can call other languages functions.
+* call other languages' functions.
   - If the function pretends to be a C function.
 
 ???
@@ -75,14 +98,14 @@ Michal Vaner (michal.vaner@avast.com)
 * Usually C or C++, though
 
 --
-* Rust can pretend to be C.
+* pretend to be C.
 
 ???
 * Not having runtime helps
   - Can be embedded into other languages
 
 --
-* Rust can be used to write *native extensions*:
+* write *native extensions*:
   - For languages like Python, Ruby, Java…
   - Just C libraries with the right functions.
 
@@ -90,6 +113,12 @@ Michal Vaner (michal.vaner@avast.com)
 * There are libraries helping with the boilerplate
   - But we'll have a look at the lower-level stuff
   - So we know how it works
+
+---
+
+.center[
+![Calling Rust from Python](workshop-ffi/python-ext.svg)
+]
 
 ---
 
@@ -191,6 +220,7 @@ fn main() {
 
 ???
 
+* Do this with the flipchart
 * Called like any other Rust function.
 * No magic happening behind the scenes:
   - Rust uses the same runtime model as C, with stack, etc...
@@ -236,6 +266,14 @@ fn main() {
   - The other direction.
   - Binding generators.
   - Tips and tricks.
+
+---
+
+# You learned today
+
+* It's cheap & easy to call between Rust and C.
+* How to pass data between them.
+* How to get a lot of it generated automatically.
 
 ---
 
