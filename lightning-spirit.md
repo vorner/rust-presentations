@@ -15,7 +15,26 @@ Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 ---
 
-# Spirit
+class: impact
+
+# {{title}}
+
+.left-column[
+Michal Vaner (michal.vaner@avast.com)
+]
+
+---
+
+# About me
+
+* Michal Vaner
+* https://github.com/vorner
+* Work in Avast
+* Rust Evangelist
+
+---
+
+# [Spirit](https://crates.io/crates/spirit)
 
 * Applications contain „meat“ and „boilerplate“
 * Spirit helps with the boilerplate
@@ -26,12 +45,17 @@ Commons, PO Box 1866, Mountain View, CA 94042, USA.
   - Allows deviating from recommended patterns
   - Allows extending
 * Still a bit under construction
+  - Especially docs
+  - I'm happy for any help
 
 ???
 
 * Introduce self
+  - About Avast
+  - Maintains some crates
 * Example with a hello world
   - Needs configuration, like ports and what to say
   - Needs logging
   - Needs daemonization
 * Suddenly takes much longer to develop
+* Show the code
