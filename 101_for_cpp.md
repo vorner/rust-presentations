@@ -23,6 +23,16 @@ class: impact
 Michal Vaner (michal.vaner@avast.com)
 ]
 
+.right-column[
+https://vorner.cz/rust-101-cpp.html
+]
+
+![](101_for_cpp/qr.svg)
+
+???
+
+TODO: Upload them there
+
 ---
 
 # About me
@@ -31,10 +41,14 @@ Michal Vaner (michal.vaner@avast.com)
 * Using both C++ and Rust
   - Professionally and for fun
 * Rust is currently favourite language
-  - Maintaining a few Rust libraries
+  - Maintaining several Rust libraries
   - Expect some bias in the talk
   - Won't tell you to Rewrite It In Rust
 * Maybe both communities will hate me after today
+
+???
+
+* Contract: it is allowed to ask during the talk
 
 ---
 
@@ -43,7 +57,6 @@ Michal Vaner (michal.vaner@avast.com)
 * C++ can do things impossible in other languages
   - „The last resort language“
   - Rust is a direct competitor for this niche
-  - Knowing the enemy
 * Rust is heavily inspired by C++
   - Both in positive and negative way
   - Probably the closest relative
@@ -51,10 +64,18 @@ Michal Vaner (michal.vaner@avast.com)
 * Expanding the horizons
   - Techniques and patterns used in one can help in the other
 
+???
+
+* It's clear I want to talk about Rust, but why to C++ people?
+* Last resort: allows doing high performance, crazy, insane and such
+* C++ devs are one of the people coming to Rust, people from high-level
+  languages needing fast programs another.
+
 ---
 
 # About the talk
 
+* To introduce what Rust is
 * Mostly on the intuitive level
   - No time for fine rigorous details
   - Rust doesn't have a standard
@@ -62,7 +83,18 @@ Michal Vaner (michal.vaner@avast.com)
   - The C++ standard allows weird implementations
 * Will not *teach* Rust syntax
   - Maybe motivate to have a look yourself
-* Will skim few selling points of Rust
+
+???
+
+* C++ on top of JVM, anyone?
+
+---
+
+class: impact
+
+# First introductions
+
+Let's meet the crabs
 
 ---
 
@@ -80,11 +112,13 @@ Michal Vaner (michal.vaner@avast.com)
 ???
 
 * It's uncommon for something to fulfill the marketing claims
+* Found other problems (and cheating), but the claims hold.
 
 ---
 
 # The 10k miles overview
 
+.left-column[
 * Rust is *mostly* C++
   - If done today from scratch
 * With Haskell's type system
@@ -92,6 +126,22 @@ Michal Vaner (michal.vaner@avast.com)
 * Syntax & feature cleanup
 * It wasn't *meant* that way from start
   - The motivation was safety, not C++ replacement
+]
+
+.right-column[
+
+![Crab mascot](images/crab.svg)
+
+]
+
+???
+
+* Unfortunately, it's getting some cruft in the syntax and features already too
+* Story about similar to Go
+  - Had channels, green threads, GC
+  - Turned to true system language out of necessity (to support firefox) and to
+    move to different niche.
+  - Story about firefox and their attempt at parallel CSS engine
 
 ---
 
@@ -106,6 +156,7 @@ Michal Vaner (michal.vaner@avast.com)
   - Personal project
 * Mozilla started to sponsor in 2009
 * 1.0 released on May 15 2015
+  - A new release every 6 weeks
 * Community development
   - With semi-formal RFC process
 ]
@@ -124,6 +175,14 @@ fn main() {
 
 ---
 
+class: impact
+
+# Rust is similar to C++
+
+You already know most of it without realizing
+
+---
+
 # Execution model
 
 * The same for both languages
@@ -138,6 +197,10 @@ fn main() {
 * Methods are just syntax sugar for functions
 * Minimal run-time introspection
 
+???
+
+* Reminder: we are talking about common C++ implementations
+
 ---
 
 # Runtime
@@ -150,6 +213,12 @@ fn main() {
   - Memory allocation
   - Stack unwinding
   - Runtime type information + dynamic dispatch
+
+???
+
+* no-std: Kernels, bootloaders, microprocessors, eBPF programs, programs on
+  graphics cards...
+  - Certainly makes life a bit harder
 
 ---
 
@@ -167,6 +236,12 @@ fn main() {
   - Memory orderings
 * Compile times
 
+???
+
+* Compile-time meta programming through macros, procedural macros and traits.
+* Non-existent variant or aliasing mutable reference is UB in rust
+* Really long compile times
+
 ---
 
 # Consequences
@@ -182,6 +257,19 @@ fn main() {
   - Thin glue code can be auto-generated
   - Allows for cross-language optimisations, like inlining
 
+???
+
+* Single-point differences in benchmarks, going both ways
+* Combining in eg. firefox
+
+---
+
+class: impact
+
+# Rust is also different
+
+There would be no point to it otherwise
+
 ---
 
 # Highlighted differences
@@ -194,6 +282,17 @@ fn main() {
 * Compilation model
 * Checked generics
 * Error messages are first-class goal
+
+???
+
+* Syntax:
+  - `variable: type`, type usually inferred without `auto`.
+  - Functions with result on the right side
+  - All items introduced by a keyword (fn, struct)
+* No auto-conversions, not everything is int
+  - C is strongly typed, but it's only type is int.
+* Checked generics: first validates traits, then substitues.
+  - Will fail to compile on errors even before instantiation
 
 ---
 
@@ -208,6 +307,10 @@ fn main() {
   - Can't be broken by refactoring
 * It's better to refuse correct program than compile an incorrect one
   - There are escape hatches
+
+???
+
+* C++ requires constant vigilance
 
 ---
 
@@ -239,9 +342,12 @@ sleep well, worry less.*
 
 ???
 
+* The devil is in the details...
+  - You can write safe C++, with some effort
+  - But in Rust you have to invest effort to write *unsafe* one.
 * Fighting the borrow checker is a phase of learning Rust
   - Automatic prover
-  - It is *usually* right
+  - It is *usually* right ‒ discovers bugs in old C++ code when ported to Rust
   - One gets use to it
   - Teaches certain design patterns
 * Probably missing something
@@ -267,6 +373,12 @@ public:
 }
 ```
 
+???
+
+* Highlight: manual review needs to be done to make sure access really *is*
+  protected by the mutex. In a long class full of business logic one might to
+  overlook it and access directly.
+
 ---
 
 # Mutex in Rust
@@ -291,13 +403,17 @@ impl Foo {
 
 ???
 
+* The string lives inside the mutex.
 * Adheres to Rust codestyle conventions (eg. getter without `get_`).
 * Unwrap because of lock poisoning
 * The setter would probably be written in a single command too, just showing off
   some syntax.
-* Is 1:1 rewrite, including where move semantics or copying of things happen
+* Is 1:1 rewrite, including where move semantics or copying of things happen.
+  See the `clone()` that's implicit in C++.
 * Doesn't allow the access to the inner string without locking. In C++ we could
   make a mistake, for example overlook something during refactoring.
+* I could break the protection, get a reference/pointer/access to the thing
+  inside without the lock, but it would take like 2 slides to do so.
 
 ---
 
@@ -311,6 +427,10 @@ impl Foo {
 * No exceptions
   - Has panics which behave similarly
   - Strong exception guarantee is not mandated
+
+???
+
+* Something *like* overloading can be done with traits
 
 --
 
@@ -333,7 +453,7 @@ impl Foo {
 * Found this in a header file:
 
 ```cpp
-static const std::string = "42";
+static const std::string answer = "42";
 ```
 
 ???
@@ -342,10 +462,14 @@ static const std::string = "42";
 
 --
 
-* That looks *old style* and has other problems
+* That looks *old style* and terrible and has other problems
 * Let's just have an `unsigned` constant instead
 * The compiler would show an error at every use
   - Compiler-driven refactoring
+
+```cpp
+static const constexpr unsigned answer = 42;
+```
 
 ---
 
@@ -373,9 +497,9 @@ std::cout << msg << std::endl;
   - Enums (with payload)
   - Something like tagged union
   - When matching, all variants must be handled
-  - Closed ‒ may not contain unlisted variants
   - Convention: errors by `Result<T, E>`
 * Traits
+  - Similar to interfaces
   - Used for adding methods to types
   - Building block for generics
 * No auto-conversions
@@ -389,10 +513,19 @@ std::cout << msg << std::endl;
     the whole body to figure it out
   - Type elision works *backwards* too (eg. figuring the type of vector element
     by what is being inserted)
+* Even `u64` and `usize` are different types and need manual conversion
 
 ---
 
-# Example: read the whole file to memory
+class: impact
+
+# Examples
+
+Let's move to some practical things
+
+---
+
+# Read the whole file to memory
 
 ```rust
 use std::io::{Error, Read};
@@ -437,6 +570,8 @@ if (const auto &elem = map.find(42); elem != map.end()) {
 
 ---
 
+class: broken
+
 # Looking up an element, *broken* C++
 
 ```cpp
@@ -444,10 +579,17 @@ std::unordered_map<int64_t, int64_t> map;
 
 // ...
 
-// Help! If 42 is not there, the aliens might kill all the kittens!
-// Or make all the dead kittens alive again!
 std::cout << "Value of 42 is " << map.find(42)->second;
 ```
+
+???
+
+* Who sees the problem?
+
+--
+
+* If 42 is missing, this is UB
+  - Arbitrarily bad things may happen
 
 ---
 
@@ -470,6 +612,9 @@ match map.get(&42) {
 
 * The returned `Option<&i64>` forces the programmer to acknowledge the
   possibility of missing element.
+* Lifetimes watch problems with iterator invalidation
+* There are other ways to write it, like `if let Some(...)` or monadic
+  combinators...
 
 ---
 
@@ -487,23 +632,6 @@ println!("The value of 42 is {}", map.get(&42).unwrap());
 
 * If value is missing, it panics in *defined* manner
 * The `unwrap` is visible in the code and conveys the intention
-
----
-
-# OOP
-
-* Allows for adding methods to *any* types
-  - Including primitive types
-* Constructors are not special
-  - Simply a static method returning an instance
-  - By convention called `new`
-* Destructors by implementing the `Drop` trait
-* Copying by implementing the `Clone` trait
-  - Can be auto-generated by the compiler (opt-in)
-* Assignment and similar *moves*
-  - Not copies, unlike in C++
-  - Original ceases to exist
-  - Equivalent of `memcpy`
 
 ---
 
@@ -528,6 +656,11 @@ int main() {
 }
 ```
 
+???
+
+* Actually, the standard allows making a copy or leaving the old vector
+  non-empty...
+
 ---
 
 # Moving a vector, Rust
@@ -551,6 +684,11 @@ fn main() {
 }
 ```
 
+???
+
+* Move semantics are the default
+  - The move is true move, not just swapping/gutting
+
 ---
 
 # Moving a vector, idiomatic Rust
@@ -566,6 +704,26 @@ fn main() {
     consume_vector(vec![10, 20]);
 }
 ```
+
+???
+
+* No mutability and creating the vector by pushing one by one. Also possibly
+  faster.
+
+---
+
+class: impact
+
+# Time savers
+
+All the annoyances one doesn't have to care about
+
+???
+
+* A language is not only about the language itself
+  - Libraries
+  - Tooling
+  - Community
 
 ---
 
@@ -584,6 +742,10 @@ fn main() {
   - `cargo audit`
   - `cargo bloat`
 
+???
+
+* Describe what each one does
+
 ---
 
 # Commonly accepted conventions
@@ -595,47 +757,9 @@ fn main() {
 + Helps reading some else's code
 + Saves time arguing about bikeshedding matters
 
----
-
-# Compile-time programming
-
-* `const fn`
-* Trait programming
-  - Example: Serde
-* Macros
-  - Work on typed token trees
-  - *Mostly* hygienic (names don't clash)
-  - Pattern matching + recursion
-* Procedural macros
-  - A function that gets bunch of tokens and produces tokens
-  - Compiled first, then made available to the compiler
-  - In macro, attribute or derive positions
-* `build.rs`
-
 ???
 
-* Macros have similar semantics as C++ templates or lisp
-
----
-
-# Auto-generating boilerplate
-
-```rust
-#[derive(
-    Copy, Clone, Debug, Eq, PartialEq, Ord,
-    PartialOrd, Hash, Serialize, Deserialize,
-)]
-#[serde(rename_all = "UPPERCASE", deny_unknown_fields)]
-struct Point {
-    x: i64,
-    y: i64,
-}
-```
-
-* `cargo expand` will show the generated code
-* Possible to write by hand
-* Some provided by compiler
-* The `Serialize` and `Deserialize` are procedural macros
+* In C++, everyone seems to have their own style
 
 ---
 
@@ -648,4 +772,23 @@ struct Point {
 * [Entirely Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/index.html)
   - Because linked lists in Rust are *hard*
 
+???
+
+* Describe what each of the sources is about.
+
 + Come work to Avast
+
+---
+
+# Rust...
+
+* ...can be as fast as C++
+* ...can be combined with C++
+* ...tries to prevent common bugs
+* ...will make you a better programmer
+  - Even if you don't decide to use it in the end
+
+???
+
+* A conclusion
+* Time for more questions
