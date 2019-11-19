@@ -29,15 +29,11 @@ https://vorner.cz/rust-101-cpp.html
 
 ![](101_for_cpp/qr.svg)
 
-???
-
-TODO: Upload them there
-
 ---
 
 # About me
 
-* Employed by Avast
+* Senior software engineer in Avast
 * Using both C++ and Rust
   - Professionally and for fun
 * Rust is currently favourite language
@@ -49,6 +45,8 @@ TODO: Upload them there
 ???
 
 * Contract: it is allowed to ask during the talk
+* Talk about omni and backend
+* Also python a bit and all bunch of other languages
 
 ---
 
@@ -56,7 +54,7 @@ TODO: Upload them there
 
 * C++ can do things impossible in other languages
   - „The last resort language“
-  - Rust is a direct competitor for this niche
+  - Rust is a direct competitor for this niche, getting traction
 * Rust is heavily inspired by C++
   - Both in positive and negative way
   - Probably the closest relative
@@ -68,6 +66,8 @@ TODO: Upload them there
 
 * It's clear I want to talk about Rust, but why to C++ people?
 * Last resort: allows doing high performance, crazy, insane and such
+* Many companies now having a look (Mozilla, Dropbox, Microsoft)
+* The most loved language on stack overflow 4times in a row
 * C++ devs are one of the people coming to Rust, people from high-level
   languages needing fast programs another.
 
@@ -183,7 +183,54 @@ You already know most of it without realizing
 
 ---
 
-# Execution model
+# Greatest Common Divisor, C++
+
+```cpp
+uint64_t gcd(uint64_t a, uint64_t b) {
+    while (a != b) {
+        if (a < b) {
+            b -= a;
+        } else {
+            a -= b;
+        }
+    }
+    return a;
+}
+```
+
+???
+
+* Yes, a more optimal way with division exists. This one is shorter.
+
+---
+
+# Greatest Common Divisor, Rust
+
+```rust
+fn gcd(mut a: u64, mut b: u64) -> u64 {
+    while a != b {
+        if a < b {
+            b -= a;
+        } else {
+            a -= b;
+        }
+    }
+    a
+}
+```
+
+???
+
+* Small syntactical differences:
+  - mut because stuff is immutable by default
+  - types on the right, after `:`
+  - Return value after `->` on the right
+  - Last value is auto-returned (without semicolon)
+  - Braces mandatory, parens around conditionals optional
+
+---
+
+# Execution & memory model
 
 * The same for both languages
 * Memory:
@@ -200,6 +247,7 @@ You already know most of it without realizing
 ???
 
 * Reminder: we are talking about common C++ implementations
+* Rust is on top of LLVM, so a lot of that follows naturally
 
 ---
 
@@ -229,7 +277,7 @@ You already know most of it without realizing
   - Monomorphisation
 * Compile-time meta programming
   - Different in each
-* Both have undefined behaviour
+* Both have undefined behaviour (not the same things)
   - An empty infinite loop is not UB in Rust
   - Only `unsafe` lets you write UB in Rust
 * The same threading model
@@ -239,7 +287,9 @@ You already know most of it without realizing
 ???
 
 * Compile-time meta programming through macros, procedural macros and traits.
-* Non-existent variant or aliasing mutable reference is UB in rust
+* on UB:
+  - The usual things ‒ pointers, memory accesses, data races in both
+  - Non-existent variant or aliasing mutable reference is UB in rust
 * Really long compile times
 
 ---
@@ -259,7 +309,7 @@ You already know most of it without realizing
 
 ???
 
-* Single-point differences in benchmarks, going both ways
+* Single-percent-point differences in benchmarks, going both ways
 * Combining in eg. firefox
 
 ---
@@ -269,6 +319,95 @@ class: impact
 # Rust is also different
 
 There would be no point to it otherwise
+
+---
+
+# Primes, C++
+
+```cpp
+vector<uint64_t> cache;
+
+for (uint64_t p = 2; ; p ++) {
+  const auto boundary = find_if(cache.begin(), cache.end(),
+                                [&](auto c) { return c * c > p; });
+  const auto divisor = find_if(cache.begin(), boundary,
+                               [&](auto c) { return p % c == 0; });
+
+  if (divisor == boundary) {
+    cout << p << endl;
+    cache.push_back(p);
+  }
+}
+```
+
+???
+
+* This prints primes, one by one, continuously until stopped
+* Go through the code what it does and why
+
+---
+
+# Primes, Rust
+
+```rust
+let mut cache: Vec<u64> = Vec::new();
+
+for p in 2u64.. {
+    let has_divisor = cache
+        .iter()
+        .take_while(|&c| c * c <= p)
+        .any(|c| p % c == 0);
+
+    if !has_divisor {
+        println!("{}", p);
+        cache.push(p);
+    }
+}
+```
+
+???
+
+* Technically almost equivalent, but not really visually similar, due to little
+  things
+* Bechmark:
+  - Removed printing
+  - Run until 100M
+  - 1:16s vs 0:46
+  - Compiled with `clang++ -O3` vs. `--release`
+  - The difference probably due to double-scan in case of C++
+
+---
+
+class: broken
+
+# Primes, „optimized“ C++
+
+```cpp
+vector<uint64_t> cache;
+*auto boundary = cache.begin();
+
+for (uint64_t p = 2; ; p ++) {
+* boundary = find_if(boundary, cache.end(),
+*                    [&](auto c) { return c * c > p; });
+  const auto divisor = find_if(cache.begin(), boundary,
+                               [&](auto c) { return p % c == 0; });
+
+  if (divisor == boundary) {
+    cout << p << endl;
+    cache.push_back(p);
+  }
+}
+```
+
+???
+
+* Let's optimize it, the boundary ever moves only forward, so we can cache it,
+  right?
+* Who sees what's wrong ‒ probably easy one
+* Segfault, other nasty stuff
+* Rust doesn't have natural place what to cache here in this code. If it had,
+  the borrow checker would scream, because it would do a shared borrow (the
+  boundary) + mut borrow (the push)
 
 ---
 
@@ -342,6 +481,7 @@ sleep well, worry less.*
 
 ???
 
+* My favourite feature
 * The devil is in the details...
   - You can write safe C++, with some effort
   - But in Rust you have to invest effort to write *unsafe* one.
@@ -375,6 +515,9 @@ public:
 
 ???
 
+* Note: this is mostly just an example. Imagine something more complex with
+  business logic, possibly multiple fields, some might be read-only for the
+  lifetime of the class and don't need the mutex, some do...
 * Highlight: manual review needs to be done to make sure access really *is*
   protected by the mutex. In a long class full of business logic one might to
   overlook it and access directly.
@@ -468,7 +611,7 @@ static const std::string answer = "42";
   - Compiler-driven refactoring
 
 ```cpp
-static const constexpr unsigned answer = 42;
+static constexpr unsigned answer = 42;
 ```
 
 ---
@@ -482,9 +625,12 @@ std::string msg = "The answer is " + answer;
 std::cout << msg << std::endl;
 ```
 
+--
+
+* Yes, this produces a warning, but will you notice?
+
 ???
 
-* Yes, this *does* produce a warning. If they are turned on.
 * And no, this is *not* a modern C++ style. But I didn't *intend* to write
   that.
 
@@ -541,6 +687,7 @@ fn file_to_mem<P: AsRef<Path>>(path: P) -> Result<Vec<u8>, Error> {
 
 ???
 
+* C++ version not showed, homework for the audience 😈
 * Error handling:
   - Need to extract the Ok variant
   - Possible by pattern matching, methods, or the question mark → visible, but
@@ -552,21 +699,30 @@ fn file_to_mem<P: AsRef<Path>>(path: P) -> Result<Vec<u8>, Error> {
 * Elision: The element of Vec on `Vec::new` is elided (from the `read_to_end`)
 * The &mut make it visible the method may/will change the content
 
+--
+
+* Actually, [`std::fs::read`](https://doc.rust-lang.org/std/fs/fn.read.html) already exists
+
 ---
 
 # Looking up an element, C++
 
 ```cpp
-std::unordered_map<int64_t, int64_t> map;
+std::unordered_map<int64_t, std::string> map;
 
 // ...
 
-if (const auto &elem = map.find(42); elem != map.end()) {
+*if (const auto &elem = map.find(42); elem != map.end()) {
     std::cout << "Value of 42 is " << elem->second << std::endl;
 } else {
     std::cout << "We don't have value of 42" << std::endl;
 }
 ```
+
+???
+
+* It returns the same thing no matter if it found or not, lack of the element is
+  signalled by special sentinel value.
 
 ---
 
@@ -575,7 +731,7 @@ class: broken
 # Looking up an element, *broken* C++
 
 ```cpp
-std::unordered_map<int64_t, int64_t> map;
+std::unordered_map<int64_t, std::string> map;
 
 // ...
 
@@ -598,11 +754,11 @@ std::cout << "Value of 42 is " << map.find(42)->second;
 ```rust
 use std::collections::HashMap;
 
-let mut map: HashMap<i64, i64> = HashMap::new();
+let mut map: HashMap<i64, String> = HashMap::new();
 
 // ...
 
-match map.get(&42) {
+*match map.get(&42) {
     Some(elem) => println!("Value of 42 is {}", elem),
     None => println!("We don't have value of 42"),
 }
@@ -610,7 +766,7 @@ match map.get(&42) {
 
 ???
 
-* The returned `Option<&i64>` forces the programmer to acknowledge the
+* The returned `Option<&String>` forces the programmer to acknowledge the
   possibility of missing element.
 * Lifetimes watch problems with iterator invalidation
 * There are other ways to write it, like `if let Some(...)` or monadic
@@ -623,7 +779,7 @@ match map.get(&42) {
 ```rust
 use std::collections::HashMap;
 
-let mut map: HashMap<i64, i64> = HashMap::new();
+let mut map: HashMap<i64, String> = HashMap::new();
 
 // ...
 
@@ -748,11 +904,64 @@ All the annoyances one doesn't have to care about
 
 ---
 
+# Example
+
+```rust
+/// Sums two numbers
+pub fn sum(a: u32, b: u32) -> u32 {
+    a + b
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sum_small() {
+        assert_eq!(4, sum(2, 2));
+    }
+}
+```
+
+???
+
+* `cargo doc --open` will show API documentation
+* `cargo test` will run the tests
+
+---
+
+# Cargo audit
+
+```
+error: Vulnerable crates found!
+
+ID:       RUSTSEC-2019-0024
+Crate:    rustsec-example-crate
+Version:  0.0.1
+Date:     2019-10-08
+URL:      https://rustsec.org/advisories/RUSTSEC-2019-0024
+Title:    Test advisory with associated example crate
+Solution:  upgrade to >= 1.0.0
+Dependency tree: 
+rustsec-example-crate 0.0.1
+└── broken 0.1.0
+
+error: 1 vulnerability found!
+```
+
+???
+
+* Show the advisory page?
+  - https://rustsec.org/advisories/RUSTSEC-2019-0024
+
+---
+
 # Commonly accepted conventions
 
 * Naming style is warned about by compiler
 * Official coding style
-* Naming guidelines
+  - `rustfmt` can reformat the code
+* Naming guidelines & API guidelines
 
 + Helps reading some else's code
 + Saves time arguing about bikeshedding matters
@@ -767,10 +976,10 @@ All the annoyances one doesn't have to care about
 
 * [The Rust Book](https://doc.rust-lang.org/stable/book/)
 * [Rust For C++ programmers](https://github.com/nrc/r4cppp)
-* [The Rustonomicon](https://doc.rust-lang.org/stable/nomicon/)
-  - About the advanced and unsafe parts
 * [Entirely Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/index.html)
   - Because linked lists in Rust are *hard*
+* [The Rustonomicon](https://doc.rust-lang.org/stable/nomicon/)
+  - About the advanced and unsafe parts
 
 ???
 
@@ -792,3 +1001,11 @@ All the annoyances one doesn't have to care about
 
 * A conclusion
 * Time for more questions
+
+---
+
+class: impact
+
+# Happy learning!
+
+And many new Rustaceans
