@@ -329,9 +329,9 @@ vector<uint64_t> cache;
 
 for (uint64_t p = 2; ; p ++) {
   const auto boundary = find_if(cache.begin(), cache.end(),
-                                [&](auto c) { return c * c > p; });
+                                [&] (auto c) { return c * c > p; });
   const auto divisor = find_if(cache.begin(), boundary,
-                               [&](auto c) { return p % c == 0; });
+                               [&] (auto c) { return p % c == 0; });
 
   if (divisor == boundary) {
     cout << p << endl;
@@ -388,9 +388,9 @@ vector<uint64_t> cache;
 
 for (uint64_t p = 2; ; p ++) {
 * boundary = find_if(boundary, cache.end(),
-*                    [&](auto c) { return c * c > p; });
+*                    [&] (auto c) { return c * c > p; });
   const auto divisor = find_if(cache.begin(), boundary,
-                               [&](auto c) { return p % c == 0; });
+                               [&] (auto c) { return p % c == 0; });
 
   if (divisor == boundary) {
     cout << p << endl;
