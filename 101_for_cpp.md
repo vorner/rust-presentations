@@ -33,7 +33,7 @@ https://vorner.cz/rust-101-cpp.html
 
 # About me
 
-* Senior software engineer in Avast
+* Senior software engineer II in Avast
 * Using both C++ and Rust
   - Professionally and for fun
 * Rust is currently favourite language
@@ -47,6 +47,7 @@ https://vorner.cz/rust-101-cpp.html
 * Contract: it is allowed to ask during the talk
 * Talk about omni and backend
 * Also python a bit and all bunch of other languages
+* Self-appointed member of the Rust Evangelist Strike Force
 
 ---
 
@@ -411,6 +412,15 @@ for (uint64_t p = 2; ; p ++) {
 
 ---
 
+# Aside: Other options
+
+* Manual `for` loop
+* Use `lower_bound` to find the boundary
+* C++-20 ranges
+  - Similar to the Rust version
+
+---
+
 # Highlighted differences
 
 * Syntax
@@ -450,6 +460,7 @@ for (uint64_t p = 2; ; p ++) {
 ???
 
 * C++ requires constant vigilance
+* Gray area of programs the compiler can't prove right or wrong
 
 ---
 
