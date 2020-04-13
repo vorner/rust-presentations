@@ -39,6 +39,7 @@ Michal Vaner (vorner@vorner.cz)
 
 # Kdo je to introvert
 
+.left-column[
 - Plynulá škála
 
 * Neplést s asociálem
@@ -48,6 +49,13 @@ Michal Vaner (vorner@vorner.cz)
 * Plánování v delších intervalech
 
 - Při porušování vyčerpání
+]
+
+.right-column[.tiny[
+![Knihovna](introvert/bookshelf.jpg)
+
+*Bessel Dekker, CC-BY-SA*
+]]
 
 ???
 
@@ -63,6 +71,7 @@ Michal Vaner (vorner@vorner.cz)
 
 # Dříve
 
+.left-column[
 * Cesta do práce metrem
 * Práce v kanceláři
   - Obecně dobrá kancelář, ale:
@@ -70,8 +79,15 @@ Michal Vaner (vorner@vorner.cz)
   - Možnost vyrušení
 * Oběd v kantýně
 * Cesta z práce metrem
+]
 
-- TODO: Obrázek, někde přeplněno
+.right-column[
+.tiny[
+![Dav na Letné](introvert/letna.jpg)
+
+*(C) Martin2035, CC-By 4.0*
+]
+]
 
 ???
 
@@ -105,14 +121,18 @@ Michal Vaner (vorner@vorner.cz)
 
 # Teď
 
+.left-column[
 * Cesta „do práce“ bez lidí
 * Práce u počítače bez vyrušování
   - Schůzky plánované
   - Asynchronní komunikace
   - Klid
 * Ušetření času a energie
+]
 
-* TODO: Obrázek, opuštěné hory
+.right-column[
+![Opuštěné hory](introvert/mountains.jpg)
+]
 
 ???
 
@@ -135,8 +155,6 @@ Michal Vaner (vorner@vorner.cz)
   - Stále na videohovorech
   - Organizování online konferencí 😈
   - Plánování, řád, rituály
-
-* TODO: Obrázek ‒ to s tím letadlem a pračkou?
 
 ???
 
