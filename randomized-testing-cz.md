@@ -23,6 +23,11 @@ class: impact
 Michal Vaner (michal.vaner@avast.com)
 ]
 
+???
+
+* Uvítat, představit se
+* Co s dotazy
+
 ---
 
 # O přednášce
@@ -35,6 +40,13 @@ Michal Vaner (michal.vaner@avast.com)
   - Nejde „hacknout“
   - Proto píšeme testy. Ale…
 
+???
+
+* Testy, kde hraje roli náhoda
+* Každý už slyšel o unit testech, integračních testech
+* Méně známá ale užitečná metoda
+* Ukázky v Rustu, a C, ale je to obecné
+
 ---
 
 # Psaní testů je těžké
@@ -43,6 +55,7 @@ Michal Vaner (michal.vaner@avast.com)
   - Včetně příkladů k této přednášce!
 * Psaní testů nikoho nebaví
 * Nikdo na to nemá čas
+* Zákazníci neplatí za napsané testy
 * Lidé nepíší dobré testy
 
 ???
@@ -63,6 +76,7 @@ Michal Vaner (michal.vaner@avast.com)
 
 ???
 
+* Správce OSS projektu 😇
 * Alespoň ne nic, na co bychom se cítili
 * Představme si tu zoufalou situaci
 * A jdeme rozhodnout, jestli ten kód přijmeme nebo ne
@@ -88,6 +102,10 @@ pub fn qsort(data: &mut [u8]) {
     }
 }
 ```
+
+???
+
+* Neprozrazovat 😇
 
 ---
 
@@ -121,6 +139,7 @@ pub fn qsort(data: &mut [u8]) {
 * Vypadá to quicksortovitě (pivot, swap, …)
 * Dodržuje styl & jmenné konvence
   - Učebnicový quicksort také používá `l` & `r`
+* Má dokumentaci
 * Má to testy
   - 100% test coverage
   - Testuje okrajové případy
@@ -130,8 +149,10 @@ pub fn qsort(data: &mut [u8]) {
 
 ???
 
+* Takle by měly vypadat všechny pull requesty!
 * Pro většinu účelů, 5 je dostatečně dobrá aproximace nekonečna
   - A máme test s velikostí 9
+* Hned vydat novou verzi
 
 ---
 
@@ -144,6 +165,7 @@ pub fn qsort(data: &mut [u8]) {
 ???
 
 * Ukázat kód znovu
+* Jo, dalo práci napsat ty testy takle „blbě“ 😈
 
 ---
 
@@ -166,6 +188,8 @@ pub fn qsort(data: &mut [u8]) {
 
 * Nemusí se nutně ověřovat perfektní správnost
 * Porovnávání s triviální/jinou implementací se nazývá „model based testing“
+* Vysvětlit, co je to minimalizace
+* Ten vstup se ukládá, aby člověk věděl, že už to opravil
 
 ---
 
@@ -337,6 +361,7 @@ clang -g -O1 -std=c99 -fsanitize=fuzzer,address \
   - Pomocí sledování coverage
   - Učí se tím jak vstup vypadá
 * Těžkotonážní v porovnání s property based testing
+  - Spíše na úrovni integration testing
 * *Velmi* náročné na CPU
   - Může potřebovat dny až týdny aby něco objevil ⏰
 
