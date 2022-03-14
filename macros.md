@@ -115,7 +115,7 @@ fn main() -> Result<(), Error> {
 ```
 
 ```rust
-include!(concat!(env!("OUT_DIR"), "/snazzy.items.rs"));
+include!(concat!(env!("OUT_DIR"), "/x.rs"));
 ```
 
 ---
@@ -247,7 +247,7 @@ macro_rules! sum_many {
     ($($a: expr, )+) => {
         [ $( &$a, )+ ].into_iter().sum()
     };
-    ($($a: expr)+,) => {
+    ($($a: expr),+) => {
         sum_many!($( $a, )+)
     };
 }
